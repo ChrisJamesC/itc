@@ -1,0 +1,637 @@
+\documentclass[11pt, a4paper]{scrartcl}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%\topmargin=-0.9in      %
+%\evensidemargin=-0.8in     %
+%\oddsidemargin=-0.8in      %
+%\textwidth=8in        %
+%\textheight=10.3in       %
+%\headsep=0.1in         %
+
+\newtheorem{theorem}{Theorem:}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{definition}[1][Definition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{example}[1][Example]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Remark]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+\newcommand{\qed}{\nobreak \ifvmode \relax \else
+      \ifdim\lastskip<1.5em \hskip-\lastskip
+      \hskip1.5em plus0em minus0.5em \fi \nobreak
+      \vrule height0.75em width0.5em depth0.25em\fi}
+
+\begin{document}
+
+\title{Information Theory and Coding}
+\date{February 2012}
+\maketitle
+\emph{This summary was kindly written by Marc Zimmerman and Christopher Chiche}
+
+\section{Source Coding}
+\subsection{Introduction}
+
+\begin{definition}[Singularity]
+A code $\mathcal C$ is singular if $\exists u \neq v$ s.t $\mathcal C(u) = \mathcal C(v)$
+\end{definition}
+
+\begin{definition}[Uniquely decodable]
+A code $\mathcal C$ is uniquely decodable if $\mathcal C^*$ is non-singular. 
+\end{definition}
+
+\begin{remark}[Prefix-free] $\Rightarrow$ uniquely decodable \end{remark}
+
+\begin{definition}[Instantaneous code]
+A code $\mathcal C$ is instantaneous if it is \bf{prefix-free}.
+\end{definition}
+
+\subsection{Optimal Codes}
+\begin{theorem} [Kraft]
+A collection $\{l(u): u\in \mathcal{U}\}$ can be the length of a
+prefix-free code iff $\sum_{u\in\mathcal{U}} 2^{-l(u)}\leq 1$
+\end{theorem}
+
+\begin{theorem} [Kraft]
+If $\mathcal{C}$ is a uniquely decodable code then
+$\sum_{u\in\mathcal{U}} 2^{-l(u)}\leq 1$
+\end{theorem}
+
+\begin{definition} [Entropy] The entropy of a source $U$ is defined as
+  $$H(U)=\sum_{u\in\mathcal{U}} p(u)\log \frac{1}{p(u)}=E\left[\log
+  \frac{1}{p(U)}\right]$$
+\end{definition}
+
+
+\begin{lemma}
+ $\sum p_i \log \frac{q_i}{p_i} \leq 0$ where $q_i=2^{-l_i}$.
+\end{lemma}
+
+\begin{theorem}
+For any uniquely decodable code $\mathcal{C}$ we have that
+$$E[\text{length}(\mathcal{C}(U))]\geq H(U)$$
+\end{theorem}
+
+\begin{theorem}
+There exists a prefix-free code $\mathcal{C}$ with
+$E[\text{length}(\mathcal{C}(U))]< H(U) + 1$
+\end{theorem}
+
+\begin{theorem} [Properties of optimal codes]
+  \begin{enumerate}
+  \item If $p(u)<p(v)$ then $l(u)\geq l(v)$
+\item Any longest codeword has a ``sibling''
+\item There is an optimal code s.t. the two least probable symbols
+  are ``siblings''
+  \end{enumerate}
+\end{theorem}
+
+\begin{theorem} [Block coding]
+For identically and independently distributed (i.i.d) RVs $U^n$ we
+have $$H(U)\leq \frac{1}{n}E[\text{length}(\mathcal{C}(U^n))]\leq
+H(U)+ \frac{1}{n}.$$
+\end{theorem}
+
+\subsection{Entropy and his Friends}
+\begin{theorem}
+$0\leq H(U) \leq \log(|\mathcal{U}|)$ with equality for the second
+inequality iff $U$'s are uniformly distributed on $\mathcal U$.
+\end{theorem}
+
+%\begin{definition}[Notation:]
+%$U^n=(U_1,U_2,\dots,U_n)$
+%\end{definition}
+
+\begin{definition}
+For a random vector $(U_1,\dots, U_n)$ with distribution
+$P_{U_1,\dots,U_n}(U_1,\dots, U_n)$ we define $$H(U^n)=E\left[\log
+  \frac{1}{p(U^n)}\right]$$
+\end{definition}
+
+
+\begin{theorem}
+  If $\{U_1,\dots,U_n\}$ are independent RVs we have $H(U^n)=\sum_{i=1}^nH(U_i)$
+\end{theorem}
+
+\begin{theorem}
+  $H(UV)\leq H(U)+H(V)$ with equality iff $U,V$ are independent
+\end{theorem}
+
+\begin{theorem}
+  $H(X)\geq H(Y)$ if $Y=f(X)$
+\end{theorem}
+
+
+\begin{definition} [Mutual Information]
+$I(U,V)=H(U)+H(V)-H(UV)=\sum_{u,v} p(u,v)\log \frac{p(uv)}{p(u)p(v)}$. Furthermore, by the
+preceding theorem, $I(U,V)\geq 0$.
+\end{definition}
+
+\begin{definition}[Conditional Entropy]
+ $H(U|V)=H(UV)-H(V)=E\left[\log
+  \frac{1}{p(U|V)}\right]=\sum_{v\in V}p(v)H(U|V=v)$
+\end{definition}
+
+\begin{theorem}
+  $I(U,V)=H(U)-H(U|V)=H(V)-H(V|U) \geq 0$ with equality iff $U,V$ independent.
+\end{theorem}
+
+\begin{theorem} [Chain rule of entropy]
+ \begin{align*}
+ H(U_1,\dots ,U_n)&=H(U_1)+H(U_2|U_1)+H(U_3|U_1,U_2)+\dots
+  +H(U_n|U_1,\dots U_{n-1})\\
+  &= \sum_{i=1}^n H(U_i | U^{i-1})
+  \end{align*}
+\end{theorem}
+
+\begin{corollary} [Chain rule for conditional entropy]
+$$  H(X,Y|Z)=H(X|Z)+H(Y|X,Z)$$
+\end{corollary}
+
+
+\begin{theorem}[Chain rule of Information]
+ $$I(U^n;V)=\sum_i I(U_i; V|U^{i-1})$$ 
+\end{theorem}
+
+
+\begin{corollary} [Chain rule for mutual information]
+$$I(U^n; V)=H(U^n)-H(U^n|V)=\sum I(U_i; V|U^{i-1})$$
+\end{corollary}
+
+\begin{corollary}[Chain rule for relative entropy]
+$$D(p(x,y)||q(x,y)) = D(p(x)||q(x)) + D(p(y|x)||q(y|x))  $$
+\end{corollary}
+
+\begin{definition}
+  \begin{eqnarray*}
+     I(U;V|W) &=& H(U|W)+H(V|W)-H(UV|W)\\
+     &=& H(UW)+H(VW)-H(UVW)-H(W)\\
+     &=& H(U|W)-H(U|VW)\\
+     &=& H(V|W)-H(V|UW)\\
+     &=& \sum_{u,v,w} p(u,v,w)\log \frac{p(uv|w)}{p(u|w)p(v|w)}\\
+     &=& \sum_w p(w)I(U;V|W=w)\\
+  \end{eqnarray*} 
+\end{definition}
+
+
+\begin{theorem}
+  $H(U)$ as a function of the distribution of $U$ is concave.
+\end{theorem}
+
+
+\begin{definition} [Kullback-Leibler Divergence]
+$p(x)$, $q(x)$ two probabilitiy distributions.
+$$D(p||q)=\sum p(x)\log \frac{p(x)}{q(x)}$$
+  
+\end{definition}
+
+\subsubsection{Entropy Rate of Stochastic Processes}
+
+\begin{definition}
+The entropy rate of a stochastic process $U_1, U_2, \dots, U_n$ is defined
+as $$\lim_{n\rightarrow\infty}\frac{1}{n}H(U_1, U_2, \dots, U_n),$$ when the
+limit exists.
+\end{definition}
+
+
+\begin{definition}[stationary stochastic process] A stochastic process $U_1,U_2,
+  \dots$ is said to be stationary if the statistics of $U_1 \dots U_k$
+  is the same as the statistics of $U_{1+m},U_{2+m}, \dots, U_{k+m}$
+  for every $k\geq 1$, $m\geq 1$.
+\end{definition}
+
+
+\begin{theorem}
+  If $U_1, U_2, \dots, U_n$ is a stationary process, the entropy rate
+  is well defined and
+$$\lim_{n\rightarrow\infty}\frac{1}{n}H(U^n) =
+\lim_{n\rightarrow\infty}\frac{1}{n}H(U_n| U^{n-1})$$
+\end{theorem}
+
+
+\begin{theorem}
+Given a stationary process with entropy rate $H$. Then: 
+\begin{itemize}
+\item for any $R>H$ there is a uniquely decodable code which uses at most $R$ bits/source
+letter to encode the source.
+\item If $R<H$, no such method exists.
+\end{itemize}
+\end{theorem}
+
+\subsubsection{Asymptotic Equipartition Porperty (AEP)}
+
+\begin{definition}
+  We define the set of $\epsilon$-typical sequences of length $n$ as
+$$T_\epsilon^n=\{u^n |
+ (1-\epsilon)p(a)\leq \frac{1}{n}N(a|u^n)\leq p(a)(1+\epsilon), \forall a\in \mathcal{U}\}$$
+\end{definition}
+
+\begin{theorem} [Properties of $T_\epsilon^n$]
+
+  \begin{enumerate}
+    \item $ Pr(U^n\in T_\epsilon^n)\rightarrow 1$ as $n\rightarrow
+      \infty$
+    \item If $u^n\in  T_\epsilon^n$ then $2^{-nH(U)(1+\epsilon)}\leq 
+      Pr(U^n=u^n)\leq 2^{-nH(U)(1-\epsilon)}$
+    \item $ |T_\epsilon^n|\leq2^{(1+\epsilon)nH}$
+    \item For $n$ large enough $(1-\epsilon)2^{(1-\epsilon)nH}\leq |T_\epsilon^n|$
+  \end{enumerate}
+\end{theorem}
+
+\begin{theorem} (Interpretations of Kullback Liebler Divergence)
+\begin{itemize}
+\item $Pr(U^n\in T_\epsilon^n) \doteq 2^{-nD(p||q)}$
+\item $ E[length[\mathcal C(\mathcal U) ]] = D(p||q) +H(p)$ if $\mathcal U$ has distrib $p$ but is encoded with distrib $q$
+\end{itemize}
+\end{theorem}
+
+\begin{remark} $u^n \in T_{\epsilon}^n(p) \Rightarrow
+       Pr(U^n(q) = u^n) = 2^{-n(D(p||q) + H(p))(1 \pm \epsilon)}$
+\end{remark}
+
+\subsection{Universal Source Coding}
+\textbf{Coding types memo} : 1 - Fixed to variable (Huffman) 2 - Fixed to fixed (coding barel?) 3 - Variable to fixed (Dictionary) 4 - Variable to variable (LZ)
+
+\subsubsection{Variable-to-fixed length coding - Tunstall algorithm}
+
+\begin{definition}
+A dictionary $\mathcal{D}$ is \emph{valid} if any infinite source sequence has a
+prefix in $\mathcal{D}$.
+\end{definition}
+
+
+\begin{definition}
+A \emph{parser}, given a dictionary $\mathcal{D}$, produces the
+longest word in the dicitonary which is a prefix of the sequence it is
+parsing and then repeats.
+\end{definition}
+
+
+\begin{definition}
+  A dictionary $\mathcal{D}$ is \emph{prefix-free} if no dictionary word is a
+  prefix of another. If a dicitonary is valid and prefix-free
+
+  \begin{enumerate}
+    \item Every sequence can be parsed
+      \item The parser can operate without looking ahead
+      \item The parsing is unique
+  \end{enumerate}
+\end{definition}
+
+
+\begin{theorem}
+  If a memoryless source $U_1,U_2,\dots$ is parsed by a valid
+  p.f. dictionary, the entropy $H(W)$ of the parsed word satisfies 
+$$H(W)=H(U)E[\mathrm{length}(W)]$$
+\end{theorem}
+
+\begin{theorem} [Tunstall algorithm]
+\begin{enumerate}
+\item Start with the root as intermediate node and all level 1 nodes as leaves.
+\item If number of leaves is equal to the desired dictionary size stop.
+\item Otherwise, pick the highest probability leaf, make it an intermediate node and grow
+K leaves on it. Goto step 2
+\end{enumerate}
+\end{theorem}
+
+\begin{proposition} 
+By choosing $b$ (\# of binary digits) large, we are choosing $M$ (\# of words) large and thus $E[L]$ large. This makes the term excess of $H(U)$ approach zero. Thus, by taking a large dictionary, the number of bits per
+source letter the scheme uses can be made as close to $H(U)$ as desired.
+$$ \frac b {E[L]}< H(U) +\frac1{E[L]} [ \log(1/P_{min}) + \log(1+(K-1)/M)]. $$
+\end{proposition}
+
+\subsubsection{Lempl-Ziv Algorithm}
+
+\begin{lemma}
+  If a string $u_1,\dots,u_n$ with $u_i\in \mathcal{U}$,
+  $|\mathcal{U}|=J$ as a concatenation of $c$ \emph{distinct} words
+  $u_1,\dots,u_n=w_1,\dots, w_c$, then $n\geq c\log_J\frac{c}{J^3}$
+\end{lemma}
+
+\begin{definition} [Compressibility of a string] Given an IL encoder 
+$E$ and a string $u_1^n$.
+\begin{itemize}
+\item $\rho_E(u_1^n)=\frac{1}{n}\textnormal{length}(y_1^n)$
+\item ($E$ with $s$ states) $\rho_s(u)\lim_{n \rightarrow \infty} \sup
+  \rho_s(u_1^n)$
+\item $\rho(u)=\lim_{s \rightarrow \infty}\rho_s(u)$
+\end{itemize}
+\end{definition}
+
+\begin{theorem}
+For any IL-encoder with $s$ states
+$$\textnormal{length}(y_1^n)\geq c(u_1^n)\log_2(c(u_1^n)/(8s^2))$$
+\end{theorem}
+
+\begin{theorem}
+On any infinite string $U_1, U_2, \dots$ LZ will perform at least as
+well as any F.S.M.
+\end{theorem}
+
+\begin{theorem}
+Suppose $U_1, U_2, \dots $ is a stationary stochastic process with
+entropy rate $H$. Then $E[\rho_{LZ}(u_1^\infty)] \leq H$, with $\rho_{LZ}(u_1^n) =$ \# of bits LZ produces when fed $u_1... u_n$
+\end{theorem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Data transmission}
+
+\begin{theorem} If we have a memoryless channel, used without feedback. Then $$P(Y_1=y_1...Y_n=y_n|X_1=x_1...X_n=x_n) = \prod_{i=1}^n P(y_i|x_i)$$
+\end{theorem}
+
+\begin{definition} [Capacity] Given a DMC with input alphabet
+  $\mathcal X$, output alphabet $\mathcal Y$, $P(Y=y|X=x) = P(y|x)$,
+  we have $C=\underset{p_x}{\max}\ I(X,Y)$
+  \begin{itemize}
+  \item Capacity of BSC ($p$ switch probability): $C_{BSC} = 1 - H(p)$
+  \item Capacity of Z-Channel: $C_Z= \log_2 (1+(1-p)p^{p/(1-p)})$
+  \end{itemize}
+\end{definition}
+
+\begin{theorem} [Fano's Inequality]
+If $U,V$ are RVs in the same alphabet $\mathcal{U}$ then : 
+$$ H(U|V) \leq h_2(p) + p\log_2(|\mathcal U|-1) $$ Where $p= Pr(U\neq V)$ and $h_2(p) =p\log_2 \frac 1p + (1-p) \log_2 \frac 1{1-p}$
+\end{theorem} 
+
+\begin{corollary}
+If $U_1...U_L, V_1...V_L$ are RVs taking value in the alphabet $\mathcal U$, then: 
+$$\frac 1L H(U^L|V^L) \leq h_2(\overline p) +\overline p \log (|\mathcal U | -1) $$
+Where $\overline p = \frac 1L \sum_{i=1}^L Pr(U_i \neq V_i)$
+\end{corollary}
+
+\begin{definition}[DMC] Discrete Memoryless Channel
+\end{definition}
+
+
+\begin{theorem} %What is a DMC?
+If $X_1... X_n$ is the input to a DMC (without feedback) and $Y_1...Y_n$ is the output, then: 
+$$ I(X^n, Y^n) \leq \sum_{i=1}^n I(X_i|Y_i) \leq nC$$ Where $C$ in the capacity of the DMC.
+\end{theorem}
+
+\begin{theorem}[Data processing Inequality]
+If $A-B-C$ forms a Markov Chain, then 
+$$ I(A;B) \geq I(A,C) $$
+\end{theorem}
+
+\begin{corollary}
+If $A-B-C-D$ is a Markov Chain, then 
+$$I(A,D) \leq I(B,C)$$
+\end{corollary}
+
+%%%%%%
+\begin{definition}[Block Codes]
+Given a channel with input alphabet $\mathcal{X}$, output alphabet $\mathcal Y$ a block code with block length $n$ and $M$ codewords is a mapping: $Enc:\{1...M\} \to \mathcal X ^n$. A decoder is a mapping: $Dec:\mathcal Y^n \to \{?,1.2...M\}$. The rate of such a code is $R=\frac 1n \log_2 M$ (bits/channel use). 
+\end{definition}
+
+\begin{definition} [Probability of error for a message M]
+$$ P_{e,m} = P(\{y^n:Dec(y^n) \neq m \} |x^n = Enc(m)) \qquad m=1,2,...M $$
+\end{definition}
+
+\begin{theorem}
+Given a DMC with $C=\underset{p_x}{\max} I(X,Y)$, $R<C$, $\epsilon >0$, there exists a block code with rate $\geq R$, $P_{e, max} <\epsilon $
+\end{theorem}
+So, for a DMC, the quantity $C$ is a fundamental quantity, namely "at rates up to $C$ we can communicate reliably" [Achievability] and "for rates $>C$ this is not possible" [Converse]
+
+\subsection{Communication with feedback}
+\begin{theorem} 
+For a DMC, feedback does not increase capacity
+\end{theorem}
+
+\section{Convex optimization}
+
+\begin{definition}[Convex function]  $f:\mathcal S\to \mathbb R$ is convex if : $\forall u,v \in \mathcal S, 0\leq \lambda \leq 1 : f(\lambda u + (1- \lambda)v) \leq \lambda f(u) + (1-\lambda)f(v) $
+\end{definition}
+
+\begin{definition}[Convex Set] A set $\mathcal S$ is convex if: $\forall u,v \in \mathcal S, 0\leq \lambda \leq 1 : (\lambda u + (1- \lambda)v) \in \mathcal S$
+\end{definition}
+
+\begin{definition} [Concave function] A function $f$ is said to be concave if $(-f)$ is convex \end{definition}
+
+\begin{corollary} 
+\begin{enumerate}
+\item If $f$ is convex then $\forall u_1,...u_k \in \mathcal S, \lambda_1... \lambda_k \geq 0 , \sum \lambda_i = 1: f(\sum_{i=1}^k \lambda_i u_i ) \leq  \sum_{i=1}^k f(\lambda_i u_i )$
+\item If $\mathcal U$ is a random variable and $f$ is convex, then $f(E[ U]) \leq E[f(U)] $ 
+\item If $f$ is convex, $\left\{\begin{matrix} a\geq 0\\ a\leq 0 \end{matrix}\right. $ then $a\cdot f$ is $ \left\{\begin{matrix} convex\\concave\end{matrix}\right. $
+\item $f_1,f_2$ convex $\to f_1 + f_2 $ is convex  and $\max (f_1, f_2)$ is convex
+\end{enumerate}
+
+\end{corollary}
+
+\begin{theorem} If $[a,b] \to \mathbb R$ and suppose f is twice differentiable and suppose $f''(x) \geq 0$ for $x\in [a,b] $ then $f$ is convex
+\end{theorem}
+
+\begin{theorem} Suppose we are given a DMC ($\mathcal X, \mathcal Y, p(y|x)$) and we set $f(p)=I(X,Y)$ when $X$ has distribution $p$, then $f$ is a concave function of $p$. 
+\end{theorem}
+
+\subsection{Maximizing concave functions over the simplex}
+
+\begin{theorem}[Kuhn-Tucker conditions for optimality]
+A necessary condition for $q\in \mathcal S$ to maximize a function $f$ is: $\forall k,j\ s.t\ q_j>0,  \frac{\partial f}{\partial q_k} \leq \frac{\partial f}{\partial q_j}$, which is equivalent to:  there is some $\mu$ such that: 
+\begin{align*}
+\frac{\partial f}{\partial q_j} = \mu && \forall j \text{ s.t } q_j>0 \\  
+\frac{\partial f}{\partial q_k} \leq \mu && \forall k \text{ s.t } q_k=0
+\end{align*}
+\end{theorem}
+
+\begin{theorem} If $f$: simplex of $K-1$ dimensions $\to \mathbb R$, f is concave. then $(p_1 .. p_K)$ maximizes $f$ if and only if \textbf{KT} conditions. 
+\end{theorem}
+
+\begin{theorem} A distribution $p_x$ minimizes $I(X;Y)$ if and only if 
+\begin{align*} \exists \mu \text{ s.t } \sum_y p(y|x) \log \frac{p(y|x)}{p(y)} &= \mu & \forall x \text{ s.t } p_X(x) >0\\
+											&\leq \mu  & \forall x \text{ s.t } p_X(x) =0
+\end{align*}
+Furthermore, $\mu = C$
+\end{theorem}
+
+\begin{theorem} The capacity achieving output distribution is unique. Also, the capacity achieving output has $p_Y(y) >0$ for all $y$ which can be reached for some input $x$
+\end{theorem}
+
+\begin{theorem}
+Suppose $p(x)$ is any input distribution (not necessarily capacity achieving). Then: 
+$$ \sum_y p(y|x) \log \frac{p(y|x)}{p(y)} \geq C\qquad \text{for some }x \text{ with $p(y)$ the output distribution corresponding to $p(x)$}$$ 
+\end{theorem}
+
+\begin{corollary} For any input distribution $p(x)$: 
+$$ \sum_x p(x) \sum_y p(y|x) \log \frac{p(y|x)}{p(y)} \leq C \leq  \max_x \sum_y p(y|x) \log \frac{p(y|x)}{p(y)}$$
+with equality on second inequality if $C= \min_{p(x)} \max_x \sum_y p(y|x) \log \frac{p(y|x)}{p(y)}$
+\end{corollary}
+
+\begin{theorem}
+For any DMC there is an input distribution $p(x)$ which achieves capacity and has $\operatorname{Support}(p)= \{x:p(x)>0\})$ of size at most $|\mathcal Y|$
+\end{theorem}
+
+\subsection{Communications with cost constraints}
+
+$\displaystyle C(\beta) = \max_{p(x_i), E[b(x_i)]\leq \beta} I(X;Y)$
+
+\begin{definition} An encoder of rate $\frac 1n$ is said to obey a \textbf{max-cost constraint $\beta$} if $\frac 1n \sum_{i=1}^n b(x_i(m)) \leq \beta$ for every $m$ 
+\end{definition}
+
+\begin{definition} An encoder of rate $\frac 1n$ is said to obey an \textbf{average-cost constraint $\beta$} if $\frac 1M \sum_{m=1}^M \frac 1n \sum_{i=1}^n b(x_i(m)) \leq \beta$
+\end{definition}
+
+
+\begin{theorem}
+If $R<C(\beta), \epsilon >0$, then there exists a block Encoder/Decoder such that: 
+\begin{enumerate}
+\item $\frac1n \log M \geq R$
+\item $Pr(\hat m \neq m |m\text{ is sent})<\epsilon \qquad \forall m$
+\item $\frac 1n \sum_{i=1}^n b(X_i(m))< \beta + \epsilon \qquad \forall m$
+\end{enumerate}
+\end{theorem}
+
+\newcommand{\eqdef}{ \overset{\underset{\mathrm{\triangle}}{}}{=} }
+
+\section{Channels with continuous valued input/output}
+\begin{definition} $h(x) \eqdef \int_X p(x) \log \frac 1{p(x)} \mathrm{d}x = E[\log \frac 1{p(x)}]$
+\end{definition}
+
+\begin{theorem}[Continuous Stuff] 
+\begin{enumerate}
+\item If $Y=X+cst $ then $h(Y) =h(X)$
+\item if $Y=aX$ then $h(Y) = h(X) +\log |a|$
+\item if $X \sim N(\mu, \sigma^2)$ then $h(x) =\frac12 \log (2\pi e \sigma^2)$
+\item A constant RV has $h$ equal to $-\infty$
+\item Differential entropy of jointly Gaussian variables:$X \sim N(\mu, \mathbf K)$,  $h(X^n)=\frac{1}{2} \log \left ( (2\pi e)^n |\mathbf K| \right )$
+\end{enumerate}
+\end{theorem}
+
+\newcommand{\dpq}{D(p||q)}
+
+\begin{definition} It $p$ and $q$ are two probability densities, we define $\dpq =  \int_X p(x) \log \frac {p(x)}{q(x)} \mathrm{d}x $ as the divergence between $p$ and $q$. 
+\end{definition}
+
+\begin{theorem} $\dpq \geq 0$ with $=0$ if and only if $p=q$
+\end{theorem}
+
+\begin{corollary} \begin{enumerate}
+\item Suppose $X$ is a $\mathbb R$-valued RV which takes values in $[a,b]$. Then $h(X) \leq h(Uniform[a,b])=\log(b-a)$
+\item Suppose $X$ is 0-mean, variance $\sigma^2$. Then  $h(X) \leq
+  \frac 12 \log (2\pi e\sigma^2)$
+\item Suppose $X$ is $\mu$-mean, $X \ge 0$. Then $h(X) \leq
+  h(Exp(\lambda)) = \frac 1 {\ln 2} - \log_2 \lambda \qquad (\lambda = \frac 1\mu)$ ($\Rightarrow$ exp. distribution has worst entropy for non-negative RV.)
+\end{enumerate} \end{corollary}
+
+\begin{theorem}[Chain-rule] $h(X^n) = \sum_{i=1}^n h(X_i|X^{i-1})$ \end{theorem}
+
+\begin{definition}
+if $X,Y$ are $\mathbb R$-valued, $I(X,Y) \eqdef \int\int p(x,y) \log \frac {p(x,y)}{p(x)p(y)}\mathrm{d}x\mathrm{d}y = D(p_{XY}||p_X p_Y) $
+\end{definition}
+
+\begin{theorem}
+\begin{enumerate}
+\item  $I(X,Y) \geq 0$, $=0$ if and only if $X$ and $Y$ are independent. 
+\item $h(X|Y) \leq h(X)$, $=$ if and only if $X$ and $Y$ are independent. 
+\item $I(X^n;Y) =  \sum_{i=1}^n I(X_i;Y|X^{i-1})$
+\item In the differential setting, 1-to-1 transformation preserves $I(\_,\_)$
+\end{enumerate}
+\end{theorem}
+
+\subsection{Channels with non-discrete alphabet}
+\begin{definition} Given a channel $\mathcal X, \mathcal Y, p(y|x)$ we say that a rate R is achievable if : 
+$$\forall \epsilon >0, \exists Enc/Dec \text{ s.t } rate(Enc) \geq R \text{ and } P(error) < \epsilon $$
+\end{definition}
+
+\begin{definition} The capacity $C$ of a channel is the largest achievable rate $C=\sup\{R| R \text{ is achievable on the channel}\}$ 
+\end{definition}
+
+\begin{theorem} For a memoryless channel $\mathcal X, \mathcal Y, p(y|x)$, $C = \sup_{p(x)} I(X.Y) $\end{theorem}
+
+\begin{theorem}$ C(\beta) = \sup_{p_x, E[b(x)]\leq \beta} I(X;Y) $\end{theorem}
+
+\begin{example}[Gaussian channel with power constraint] $C=\frac12 \log(1+\frac p{\sigma^2})$ \end{example}
+
+\section{Rudiments of Coding theory}
+
+\begin{example}[$(7,4)$ Hamming Code] Binary code with block length 7 where $\vec x \in \mathbb F_2^n$ is a codeword if and only if it satisfies : 
+$$\begin{bmatrix} 1 & 0 & 0 & 1 & 1 & 0 & 1\\ 0 & 1 & 0 & 1 & 0 & 1 & 1\\ 0 & 0 & 1 & 0 & 1 & 1 & 1 \end{bmatrix}.\begin{bmatrix} x_1\\ \vdots \\ x_7\end{bmatrix} =  \begin{bmatrix} 0\\ \vdots \\ 0\end{bmatrix} $$
+This code has $2^5$ codewords. Single error correcting. 
+\end{example}
+
+\begin{example}[Hamming codes] $(2^m-1, 2^m-m-1)$: \# of codewords $= 2^{dimensions}$. Capable of correcting "1 flip"
+\end{example}
+
+\begin{remark} The Hamming distance $d_h$ is a metric \end{remark}
+
+\begin{theorem} If $d=d_{min} (\mathcal C)$ then the code $\mathcal C$ can correct $\left \lfloor \frac {d-1}{2} \right \rfloor$ flips
+\end{theorem}
+
+\begin{theorem} $d_{min} (\mathcal C)$ is a good "figure of the merit" in measuring how good a code is. 
+\end{theorem}
+
+\begin{definition}[Hamming weight of a sequence $\bar x$] $w_H(\bar x) = \# \{i, x_i\neq 0 \}$
+\end{definition}
+
+\begin{theorem} If $\mathcal C$ is a linear code, then $d_{min} (\mathcal C) = \min_{\bar x \in \mathcal C, x\neq 0} w_H(\bar x)$
+\end{theorem}
+
+\begin{theorem}[Sphere packing bound] Suppose a codeword $\mathcal C \in \mathbb F_2^n$ can correct all possible $e$ or fewer flips. Then: $$|\mathcal C| \sum_{i=0}^e \binom ni \leq 2^n $$
+With equality if perfect code
+\end{theorem}
+
+\begin{theorem}[Gilbert Varshamov bound] Given a block length $n$ and $d$. there is a code  $\mathcal C \in \mathbb F_2^n$ with : $d_{min} (\mathcal C)\geq d$, $|\mathcal C| \sum_{i=0}^{d-1} \binom ni \geq 2^n $
+\end{theorem}
+
+\begin{corollary}[Gilbert Varshamov for linear codes] Given $n,d$ there is a linear code $\mathcal C$ with $|\mathcal C| \sum_{i=0}^{d-1} \binom ni \geq 2^n $
+\end{corollary}
+
+\begin{theorem}[Singleton bound] If a code $\mathcal C \in \mathbb F_2^n$ has $|\mathcal C| > 2^k $ ($k$ integer) then $d_{min}(\mathcal C) \leq n-k$
+\end{theorem}
+
+\subsection{Reed-Salomon codes}
+Block codes over alphabets which are algebric fields  $\mathcal C \in \mathbb F^n$. 
+
+They are described as follows: Pick $\alpha_1, \alpha_2... \alpha_n$ distinct elements of $ \mathbb F$. The code is going to have $| \mathbb F|^k$ codewords, to each$\vec u \in  \mathbb F^k$ we will associate a codeword $\vec x(\vec u)$. The rule that describes $\vec u \mapsto \vec x(\vec u)$ is as follows: 
+
+Given $\vec u = (u_0, ...  u_{k-1})$, first construct the polynomial $U(D) = u_0 +u_1D+u_2D^2 +...+u_{k-1}D^{k-1}$. Set $\vec x(\vec u) = (u(\alpha_1), u(\alpha_2),..., u(\alpha_n))$
+
+\begin{theorem}
+$d_{min}(RS\ code\ \mathcal C) = n-k-1$ 
+\end{theorem}
+
+\begin{itemize}
+\item A $(n,k)$ Reed-Salomon code can correct $(n-k)$ erasures
+\item It is possible to achieve the capacity of the Binary Symetric Channel by using Linear Codes. 
+\end{itemize}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Rappels}
+\begin{theorem} [Chebychev's inequality]
+In the case of a random variable $S_n$ that is the sum of $n$ i.i.d. random variables
+$X_1,X_2,..., X_n$ we have : $$Pr(|S_n -n\mu|\geq a) \leq \frac{n\sigma^2}{a^2} $$
+\end{theorem}
+
+\begin{theorem} [Strong law of large numbers]
+$$\forall \epsilon, Pr(\lim_{n \to \infty} |\bar X_n - \mu | > \epsilon) = 0 \text{ with } \bar X_n = \frac1n (X_1...X_n)$$
+\end{theorem}
+
+\begin{theorem} [About markov Chains] If $X-Y-Z$ is a Markov chain : 
+\begin{itemize}
+\item $I(X, Z|Y) = 0$
+\item $I(X, Y) \geq I(X, Z)$
+\end{itemize}
+\end{theorem}
+
+\begin{theorem}[Jensen's inequality] 
+If $f$ is a convex function, then $E[f(x)]\geq f(E[x])$
+\end{theorem}
+
+\begin{remark}[Sums] $\displaystyle \sum_{n=0}^{N-1} r^n = \frac{1-r^N}{1-r} \qquad   \qquad  \sum_{n=0}^{\infty} nr^n = \frac{r}{(1-r)^2} $
+\end{remark}
+
+\begin{remark}[K-ary tree] If a K-ary tree has $n$ nodes, then it has $1+(K-1).n$ leaves. 
+\end{remark}
+
+
+\end{document}
+
+
+
